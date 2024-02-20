@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "7"
+version = "0.1.0"
+description = ""
+authors = ["Matias Wallenius <MatiWall@live.dk>"]
+readme = "README.md"
+
+[[tool.poetry.source]]
+name = "private"
+url = "http://pypi.mw"
+priority = "primary"
+
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyyaml = "^6.0.1"
+fastapi = "^0.109.0"
+uvicorn = "^0.27.0"
+httpx = "^0.26.0"
+extensions-configuration = "0.1.2"
+gitpython = "^3.1.41"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

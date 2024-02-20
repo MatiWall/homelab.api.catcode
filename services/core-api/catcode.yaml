@@ -1,0 +1,18 @@
+kind: Component
+metadata:
+  description: Backend for catcode.
+  system: catcode
+  application: backend
+  deployableUnit: core-data
+  owner: mw
+  tags:
+  - python
+  - api
+  - backend
+spec:
+  type: service
+  lifecycle: development
+  links:
+  - title: Telemetry
+    url: http://grafana.mw
+

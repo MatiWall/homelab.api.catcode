@@ -1,0 +1,18 @@
+kind: Component
+metadata:
+  description: Backend for catcode.
+  system: catcode
+  application: backend
+  deployableUnit: dependencies
+  owner: mw
+  tags:
+  - python
+  - api
+  - backend
+  - dependencies
+spec:
+  type: catcode-backend
+  lifecycle: development
+  dependencies:
+    - catcode.backend.core-data
+

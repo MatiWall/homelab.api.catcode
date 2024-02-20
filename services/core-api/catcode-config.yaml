@@ -1,0 +1,5 @@
+catalog:
+  locations:
+    - source: github
+      user: MatiWall
+      file: "catcode.yaml"
