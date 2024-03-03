@@ -14,5 +14,6 @@ spec:
   lifecycle: development
   links:
   - title: Telemetry
+    icon: grafana
     url: http://grafana.mw
 
