@@ -4,7 +4,6 @@ metadata:
   system: catcode
   application: backend
   deployableUnit: core-data
-  owner: mw
   tags:
   - python
   - api
@@ -18,4 +17,5 @@ metadata:
 spec:
   type: service
   lifecycle: development
+  owner: mw
 
