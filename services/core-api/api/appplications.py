@@ -28,7 +28,7 @@ def get_applications():
     return Applications(apps=apps)
 
 
-@router.get('/component/{system}/{application}/{deployableunit}')
+@router.get('/{system}/{application}/{deployableunit}')
 def get_applications(system: str, application: str, deployableunit: str):
     config = database.get((system, application, deployableunit))
 

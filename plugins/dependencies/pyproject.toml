@@ -5,6 +5,16 @@ description = ""
 authors = ["Matias Wallenius <MatiWall@live.dk>"]
 readme = "README.md"
 
+[[tool.poetry.source]]
+name = "private"
+url = "http://pypi.mw"
+priority = "primary"
+
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 pyyaml = "^6.0.1"

@@ -11,7 +11,7 @@ def dependency(configs, identifier: str = None):
             'system': name[0],
             'application': name[1],
             'deployableUnit': name[2],
-            'dependencies': value['spec'].get('dependencies', []),
+            'dependencies': [configs[(dep.split('.')[0], dep.split('.')[1], dep.split('.')[2])]['metadata']['uid'] for dep in value['spec'].get('dependencies', [])],
             'id': value['metadata']['uid']
         }
         return [entry]
@@ -21,7 +21,7 @@ def dependency(configs, identifier: str = None):
             'system': name[0],
             'application': name[1],
             'deployableUnit': name[2],
-            'dependencies': values['spec'].get('dependencies', []),
+            'dependencies': [configs[(dep.split('.')[0], dep.split('.')[1], dep.split('.')[2])]['metadata']['uid'] for dep in values['spec'].get('dependencies', [])],
             'id': values['metadata']['uid']
         }
         data.append(entry)
