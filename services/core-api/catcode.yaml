@@ -4,15 +4,18 @@ metadata:
   system: catcode
   application: backend
   deployableUnit: core-data
-  owner: mw
   tags:
   - python
   - api
   - backend
+  links:
+  - title: Telemetry
+    icon: grafana
+    url: http://grafana.mw
+  - title: example
+    url: https://www.example.com
 spec:
   type: service
   lifecycle: development
-  links:
-  - title: Telemetry
-    url: http://grafana.mw
+  owner: mw
 
