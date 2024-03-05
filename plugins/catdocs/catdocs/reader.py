@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 import logging
-from typing import Dict
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

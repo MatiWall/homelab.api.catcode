@@ -17,6 +17,7 @@ class CatCodeRepoEntry(BaseModel):
     repo: str
     repo_path: str
     user: str
+    url: str
     sha: str
 class Repository(BaseModel):
     repo_url: str
@@ -54,7 +55,8 @@ class GitHubFileSearch:
                     repo=item['repository']['name'],
                     repo_path=item['path'],
                     sha=item['sha'],
-                    user=item['repository']['owner']['login']
+                    user=item['repository']['owner']['login'],
+                    url=item['repository']['url'],
                 ) for item in data['items']]
             return file_paths
         else:
@@ -131,7 +133,9 @@ class GithubReader:
                 if catcode_yaml_content is None:
                     logger.error(f'Failed to find content for repository {repo.repo} at path {repo.repo_path}.')
                 c = yaml.safe_load(catcode_yaml_content)
+
                 entry = Application(**c)
+                entry.metadata.annotations['catcode.io/github-url'] = repo.url
                 configs.append(entry)
         return configs
 
