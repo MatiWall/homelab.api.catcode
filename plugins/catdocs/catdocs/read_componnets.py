@@ -20,6 +20,8 @@ async def read_components():
 
     for comp in components:
         if comp['metadata'].get('annotations', {}).get(config.catdocs_build_annotation):
-            comps.append(comp)
+            comps.append({
+                'url': comp['metadata'].get('annotations', {}).get(config.catcode_url_annotation)
+            })
 
     return comps

@@ -19,6 +19,7 @@ class CatCodeRepoEntry(BaseModel):
     user: str
     url: str
     sha: str
+    clone_url: str = ''
 class Repository(BaseModel):
     repo_url: str
     html_url: str
@@ -63,16 +64,6 @@ class GitHubFileSearch:
             logger.error("Error occurred while fetching data from GitHub API.")
             return None
 
-    def read_file_content(self, file_path):
-        headers = {"Authorization": f"Bearer {self.token}"}
-        raw_url = f"https://raw.githubusercontent.com/{self.username}/{file_path}"
-        response = httpx.get(raw_url, headers=headers)
-        if response.status_code == 200:
-            return response.text
-        else:
-            print(f"Error reading file from {raw_url}")
-            return None
-
 class GithubReader:
 
     def __init__(self, token, username):
@@ -83,18 +74,6 @@ class GithubReader:
 
     def request_header(self):
         return {"Authorization": f"Bearer {self.token}"}
-
-    def get_default_branch(self, repo):
-        url = f"https://api.github.com/repos/{repo}"
-        response = httpx.get(url, headers=self.request_header())
-
-        if response.status_code == 200:
-            repo_info = response.json()
-            default_branch = repo_info['default_branch']
-            return default_branch
-        else:
-            logger.error(f"Failed to fetch repository information: {response.status_code}")
-            return None
 
     def fetch_file_content(self, repo_full_name, path, user):
         headers = {"Authorization": f"Bearer {self.token}"}
