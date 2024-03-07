@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 import httpx
+from catdocs.models import CatDocsComponent
 
 from settings import config
 async def read_components():
@@ -20,8 +21,16 @@ async def read_components():
 
     for comp in components:
         if comp['metadata'].get('annotations', {}).get(config.catdocs_build_annotation):
-            comps.append({
-                'url': comp['metadata'].get('annotations', {}).get(config.catcode_url_annotation)
-            })
+
+            comps.append(
+                CatDocsComponent(
+                    url=comp['metadata'].get('annotations', {}).get(config.catcode_url_annotation),
+                    docs_path=comp['metadata'].get('annotations', {}).get(config.catdocs_path_annotation),
+                    repo_path=comp['metadata'].get('annotations', {}).get(config.catcode_repo_path_annotation),
+                    deployable_unit=comp['metadata']['deployableUnit'],
+                    application=comp['metadata']['application'],
+                    system=comp['metadata']['system']
+                )
+            )
 
     return comps

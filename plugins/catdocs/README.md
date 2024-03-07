@@ -1,4 +1,2 @@
 
-* On startup find catalogs with catdocs annotation
-* build objects with necessary info to build docs
-* Github reader should create a folder for repo
+* unable to build docs, fails with Error reading page 'config.md': No module named 'mkdocstrings_handlers'

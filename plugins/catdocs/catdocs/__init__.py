@@ -1,0 +1,1 @@
+import catdocs.handler_registration

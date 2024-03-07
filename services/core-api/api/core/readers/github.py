@@ -1,6 +1,5 @@
 import logging
-import os
-import shutil
+from pathlib import Path
 
 import httpx
 import base64
@@ -19,7 +18,6 @@ class CatCodeRepoEntry(BaseModel):
     user: str
     url: str
     sha: str
-    clone_url: str = ''
 class Repository(BaseModel):
     repo_url: str
     html_url: str
@@ -115,6 +113,7 @@ class GithubReader:
 
                 entry = Application(**c)
                 entry.metadata.annotations['catcode.io/github-url'] = repo.url
+                entry.metadata.annotations['catcode.io/repo-path'] = Path(repo.repo_path).parent
                 configs.append(entry)
         return configs
 

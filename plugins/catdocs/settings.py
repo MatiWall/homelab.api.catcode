@@ -4,12 +4,12 @@ from extensions.configuration import read_configs_to_dataclass, hosting_environm
 from extensions.opentelemetry.config import configure_logging
 
 
-BASe_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent
 
 
 configure_logging(enable_otel=hosting_environment.is_production())
 
-config = read_configs_to_dataclass()
+config = read_configs_to_dataclass(BASE_DIR)
 
 
 
