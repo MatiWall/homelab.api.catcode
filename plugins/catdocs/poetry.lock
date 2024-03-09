@@ -238,6 +238,25 @@ url = "http://pypi.mw"
 reference = "private"
 
 [[package]]
+name = "event-tools"
+version = "0.1.2"
+description = ""
+optional = false
+python-versions = ">=3.11,<4.0"
+files = [
+    {file = "event_tools-0.1.2-py3-none-any.whl", hash = "sha256:2813ebda38bfc97442dc5e91ce3b348f0e822f72a30689d96532f2984c33c8cc"},
+    {file = "event_tools-0.1.2.tar.gz", hash = "sha256:37d1eb81b87a3c7104442281256c373a709c85480269536723b6340b4da7823b"},
+]
+
+[package.dependencies]
+pydantic = ">=2.6.3,<3.0.0"
+
+[package.source]
+type = "legacy"
+url = "http://pypi.mw"
+reference = "private"
+
+[[package]]
 name = "extensions-configuration"
 version = "0.1.2"
 description = ""
@@ -1726,4 +1745,4 @@ reference = "private"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "1f4382fe7f59a93c5ba3c944274b05300c28757e72c88f0c9c7a057093aa5b0a"
+content-hash = "c7c0a2d534490af4f405c0820ebf9a68d748b08ef763db2ee1d8bc9b1c884203"

@@ -27,8 +27,11 @@ class MKDocs:
             # Change directory to the folder path
             os.chdir(folder_path)
             # Run MkDocs build command
-            subprocess.run(["mkdocs", "build"])
-
-            logger.info("MkDocs build completed successfully.")
+            output = subprocess.run(["mkdocs", "build"])
+            if output.returncode == 0:
+                logger.info("MkDocs build completed successfully.")
+            else:
+                raise Exception(f'Failed to generate documentation for {comp}.')
         except Exception as e:
             logger.exception(f"Failed to run MkDocs on folder: {folder_path}. Error: {e}")
+            raise

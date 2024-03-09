@@ -1,14 +1,10 @@
-from enum import Enum, auto
-from pydantic import BaseModel
+from enum import StrEnum
 
-class EventType(Enum):
-    ADDED_REPO = auto()
-    UPDATED_REPO = auto()
-    DELETED_REPO = auto()
-    ON_STARTUP = auto()
-    BUILD_DOCS = auto()
-
-class Event(BaseModel):
-    type: EventType
-    body: object
+class EventType(StrEnum):
+    ADDED_REPO = 'ADDED_REPO'
+    UPDATED_REPO = 'UPDATED_REPO'
+    DELETED_REPO = 'DELETED_REPO'
+    ON_STARTUP = 'ON_STARTUP'
+    BUILD_DOCS = 'BUILD_DOCS'
+    MOVE_DOCS = 'MOVE_DOCS'
 

@@ -1,7 +1,8 @@
 import asyncio
+from event_tools import Event
 
 from catdocs import event_bus
-from catdocs.events import Event, EventType
+from catdocs.events import EventType
 from catdocs.event_bus import event_bus
 from catdocs.queue import event_queue
 from catdocs.read_componnets import read_components
@@ -16,8 +17,8 @@ async def service():
         type=EventType.ON_STARTUP,
         body=components
     )
-    await event_bus.publish(on_startup_event)
-    await event_bus.publish(
+    await event_bus.emit(on_startup_event)
+    await event_bus.emit(
         Event(
             type=EventType.BUILD_DOCS,
             body=components[0]
@@ -27,5 +28,5 @@ async def service():
     while True:
         # Wait for an event and process it
         event = await event_queue.get()
-        await event_bus.publish(event)
+        await event_bus.emit(event)
 

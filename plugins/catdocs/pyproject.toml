@@ -13,7 +13,7 @@ priority = "primary"
 
 [[tool.poetry.source]]
 name = "PyPI"
-priority = "primary"
+priority = "supplemental"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -25,6 +25,7 @@ extensions-opentelemetry = "^0.1.0"
 extensions-configuration = "^0.1.2"
 mkdocs-material = "^9.5.13"
 mkdocstrings = "^0.24.1"
+event-tools = "0.1.2"
 
 
 [build-system]
