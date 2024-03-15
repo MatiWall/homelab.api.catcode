@@ -1,4 +1,6 @@
 import logging
+logger = logging.getLogger(__name__)
+
 from fastapi import FastAPI, Request, status
 import uvicorn
 
@@ -33,4 +35,5 @@ app.include_router(application_router)
 app.include_router(stat_router)
 
 if __name__ == '__main__':
+    logger.info('CatCode core api starting up')
     uvicorn.run('main:app')

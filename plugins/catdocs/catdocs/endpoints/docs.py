@@ -17,7 +17,7 @@ def return_static_css(system, application, deployableUnit):
 @router.get('/{system}/{application}/{deployableUnit}/{path:path}')
 def return_html_docs(system, application, deployableUnit, path):
 
-    file_path = settings.BASE_DIR / f'builds/{system}.{application}.{deployableUnit}/site/{path}/index.html'
+    file_path = settings.BASE_DIR / f'builds/{system}.{application}.{deployableUnit}/site/{path}'
     try:
         with file_path.open('r') as file:
             html_content = file.read()

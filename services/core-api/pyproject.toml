@@ -23,6 +23,7 @@ uvicorn = "^0.27.0"
 httpx = "^0.26.0"
 extensions-configuration = "0.1.2"
 gitpython = "^3.1.41"
+extensions-opentelemetry = "^0.1.0"
 
 
 [build-system]
