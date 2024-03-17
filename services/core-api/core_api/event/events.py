@@ -1,0 +1,7 @@
+from enum import StrEnum
+
+class Events(StrEnum):
+    LOOK_FOR_CHANGES = 'LOOK-FOR-CHANGES'
+    NEW_COMPONENT = 'NEW_COMPONENT'
+    UPDATED_COMPONENT = 'UPDATED_COMPONENT'
+    ON_START_UP = 'ON_START_UP'

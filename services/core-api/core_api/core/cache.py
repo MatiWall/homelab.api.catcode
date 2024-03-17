@@ -5,11 +5,11 @@ from fastapi.exceptions import HTTPException
 
 import yaml
 
-from api.core.readers.github import GithubReader
+from core_api.core.readers.github import GithubReader
 from settings import BASE_DIR, config as app_config
 
 
-class FilesystemDatabase:
+class Cache:
     """
     A simple file system database class that stores data in YAML files.
 
@@ -30,40 +30,30 @@ class FilesystemDatabase:
 
     def __init__(self, path: Path):
         """
-        Initialize the FilesystemDatabase with the specified base directory.
+        Initialize the Cache with the specified base directory.
 
         Parameters:
         - path (Path): The base directory where the YAML files are stored.
         """
         self.path = path
-        self.cache = self._get_all()
+        self._cache = {}
 
-    def _get_all(self):
+    def add(self, component):
+        self._cache[(
+            component.metadata.system,
+            component.metadata.application,
+            component.metadata.deployable_unit)
+        ] = component
+        return True
+
+    def get_all(self):
         """
         Retrieve all data from the file system.
 
         Returns:
         dict: A dictionary containing all data from the file system.
         """
-        config = self._get(self.path / 'catcode-config.yaml')
-        github_username = "MatiWall"
-        github_token = app_config.github_token
-        component_configs = GithubReader(username=github_username, token=github_token).get_files()
-        data = {}
-        for i, config in enumerate(component_configs):
-
-            data[(
-                config.metadata.system,
-                config.metadata.application,
-                config.metadata.deployable_unit)
-            ] = config
-        return data
-
-    @staticmethod
-    def _get(path):
-        with open(path, 'r') as file:
-            config = yaml.safe_load(file)
-        return config
+        return self._cache
 
     def get(self, id: Optional[tuple[str,str, str]] = None):
         """
@@ -76,11 +66,9 @@ class FilesystemDatabase:
         Any: The data associated with the specified ID, or None if not found.
         """
         if id is None:
-            return list(self.cache.values())
-        elif id in self.cache:
-            return self.cache[id]
-        elif id == 'new':
-            return self._get(BASE_DIR / 'default_config/new.yaml')
+            return list(self._cache.values())
+        elif id in self._cache:
+            return self._cache[id]
 
         raise HTTPException(status_code=404, detail=f'File with id "{id}" does not exist')
 
@@ -88,10 +76,12 @@ class FilesystemDatabase:
 
     def stats(self):
 
-        output_list = [list(item) for item in zip(*list(self.cache.keys()))]
+        output_list = [list(item) for item in zip(*list(self._cache.keys()))]
         return {
             'applications': len(list(set(output_list[1]))),
             'systems': len(list(set(output_list[0]))),
             'deployableUnits': len(list(output_list[2]))
         }
 
+
+cache = Cache(BASE_DIR)

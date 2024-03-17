@@ -6,7 +6,7 @@ import base64
 from pydantic import BaseModel
 import yaml
 
-from api.core.models import Application
+from core_api.core.models import Application
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)  # Set logging level as per your requirement

@@ -1,14 +1,14 @@
 from pydantic import BaseModel
 from fastapi import APIRouter
 
-from api.core.file_database import FilesystemDatabase
-from api.core.models import Metadata, Application
-from settings import BASE_DIR
+from core_api.core.cache import cache
+from core_api.core.models import Metadata, Application
+
 
 router = APIRouter(prefix='/catalog')
 
-path = BASE_DIR
-database = FilesystemDatabase(path)
+
+
 
 
 class ApplicationCatalog(BaseModel):
@@ -19,7 +19,7 @@ class Applications(BaseModel):
 
 @router.get('/')
 def get_applications():
-    configs = database.get()
+    configs = cache.get()
 
     apps = []
     for config in configs:
@@ -30,6 +30,6 @@ def get_applications():
 
 @router.get('/{system}/{application}/{deployableunit}')
 def get_applications(system: str, application: str, deployableunit: str):
-    config = database.get((system, application, deployableunit))
+    config = cache.get((system, application, deployableunit))
 
     return config

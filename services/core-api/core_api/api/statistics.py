@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter
-from .appplications import database
+from core_api.api.appplications import database
 
 
 router = APIRouter(prefix='/statistics')

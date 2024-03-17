@@ -6,7 +6,7 @@ metadata:
   deployableUnit: core-data
   tags:
   - python
-  - api
+  - core_api
   - backend
   links:
   - title: Telemetry

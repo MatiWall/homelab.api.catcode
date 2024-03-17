@@ -1,3 +1,4 @@
+import asyncio
 import logging
 logger = logging.getLogger(__name__)
 
@@ -5,9 +6,9 @@ from fastapi import FastAPI, Request, status
 import uvicorn
 
 
-from api.appplications import router as application_router
-from api.statistics import router as stat_router
-
+from core_api.api.appplications import router as application_router
+from core_api.api.statistics import router as stat_router
+from core_api.service import service
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -31,9 +32,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(service())
+
 app.include_router(application_router)
 app.include_router(stat_router)
 
 if __name__ == '__main__':
-    logger.info('CatCode core api starting up')
+    logger.info('CatCode core core_api starting up')
     uvicorn.run('main:app')
