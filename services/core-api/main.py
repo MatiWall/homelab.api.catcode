@@ -2,6 +2,8 @@ import asyncio
 import logging
 logger = logging.getLogger(__name__)
 
+from core_api import scheduler
+
 from fastapi import FastAPI, Request, status
 import uvicorn
 
@@ -35,6 +37,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(service())
+    scheduler.start()
 
 app.include_router(application_router)
 app.include_router(stat_router)

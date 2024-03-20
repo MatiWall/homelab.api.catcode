@@ -6,4 +6,4 @@ from .tasks import (
 
 scheduler = AsyncIOScheduler()
 
-scheduler.add_job(emit_check_for_updates_event, 'interval', seconds=3)
+scheduler.add_job(emit_check_for_updates_event, 'interval', seconds=10)

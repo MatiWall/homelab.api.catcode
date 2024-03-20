@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from fastapi import APIRouter
 
-from core_api.core.cache import cache
+from core_api.core.componentcache import cache
 from core_api.core.models import Metadata, Application
 
 

@@ -1,11 +1,15 @@
-from event_tools import Event
+import logging
+logger = logging.getLogger(__name__)
+
+from messaging_tools import Message
 from core_api.event.events import Events
 from core_api.event.queue import queue
 
-async def emit_check_for_updates_event():
-    event = Event(
+def emit_check_for_updates_event():
+    logger.debug('Checking for updates to tracked repos.')
+    event = Message(
         type=Events.LOOK_FOR_CHANGES
     )
-    await queue.put(event)
+    queue.put_nowait(event)
 
 

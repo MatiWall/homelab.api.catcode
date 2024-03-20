@@ -3,13 +3,11 @@ from typing import Optional
 
 from fastapi.exceptions import HTTPException
 
-import yaml
-
-from core_api.core.readers.github import GithubReader
-from settings import BASE_DIR, config as app_config
+from core_api.core.reader.models import CatCodeRepoEntry
+from settings import BASE_DIR
 
 
-class Cache:
+class ComponentCache:
     """
     A simple file system database class that stores data in YAML files.
 
@@ -30,7 +28,7 @@ class Cache:
 
     def __init__(self, path: Path):
         """
-        Initialize the Cache with the specified base directory.
+        Initialize the ComponentCache with the specified base directory.
 
         Parameters:
         - path (Path): The base directory where the YAML files are stored.
@@ -83,5 +81,22 @@ class Cache:
             'deployableUnits': len(list(output_list[2]))
         }
 
+class TrackedPathsCache:
+    def __init__(self):
+        self._cache = {}
 
-cache = Cache(BASE_DIR)
+    def add(self, repo: CatCodeRepoEntry):
+        if repo.name not in self._cache.keys():
+            self._cache[repo.name] = repo.sha
+            return 'New'
+        elif repo.name in self._cache.keys() and repo.sha == self._cache[repo.name]:
+            return 'NoChange'
+        elif repo.name in self._cache.keys() and repo.sha != self._cache[repo.name]:
+            return 'Updated'
+
+        return True
+
+
+
+tracked_paths = TrackedPathsCache()
+cache = ComponentCache(BASE_DIR)

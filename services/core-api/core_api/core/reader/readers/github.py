@@ -3,38 +3,20 @@ from pathlib import Path
 
 import httpx
 import base64
-from pydantic import BaseModel
 import yaml
 
 from core_api.core.models import Application
+from core_api.core.reader.models import CatCodeRepoEntry
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)  # Set logging level as per your requirement
 
+class GithubReader:
 
-class CatCodeRepoEntry(BaseModel):
-    repo: str
-    repo_path: str
-    user: str
-    url: str
-    sha: str
-class Repository(BaseModel):
-    repo_url: str
-    html_url: str
-    branch: str
-    name: str
-    sha: str
-
-class ReaderEntry(BaseModel):
-    repo: Repository
-    application: Application
-
-
-class GitHubFileSearch:
-    def __init__(self, username, token, tracked_file):
-        self.username = username
+    def __init__(self, token, username):
         self.token = token
-        self.tracked_file = tracked_file
+        self.username = username
+        self.tracked_file = 'catcode.yaml'
 
     def search_files(self):
         headers = {"Authorization": f"Bearer {self.token}"}
@@ -62,14 +44,9 @@ class GitHubFileSearch:
             logger.error("Error occurred while fetching data from GitHub API.")
             return None
 
-class GithubReader:
 
-    def __init__(self, token, username):
-        self.token = token
-        self.username = username
-        self.tracked_file = 'catcode.yaml'
-        self.reader = GitHubFileSearch(username=username, token=token, tracked_file=self.tracked_file)
-
+    def files(self):
+        return self.search_files()
     def request_header(self):
         return {"Authorization": f"Bearer {self.token}"}
 
@@ -93,34 +70,27 @@ class GithubReader:
             logger.error(f"Error: {response.status_code}")
             return None
 
-    def get_files(self):
-        paths = self.reader.search_files()
+    def get_file_content(self, repo: CatCodeRepoEntry):
 
-        configs = []
-        if paths:
-            for repo in paths:
-                logger.info(f"Fetching content of catcode.yaml in repository: {repo.repo} at path {repo.repo_path}.")
+        logger.info(f"Fetching content of catcode.yaml in repository: {repo.repo} at path {repo.repo_path}.")
 
-                # Fetch the content of catcode.yaml in the repository
-                try:
-                    catcode_yaml_content = self.fetch_file_content(repo.repo, repo.repo_path, repo.user)
-                except Exception as e:
-                    logger.exception(f'Failed to read config from repo {repo.repo} at path {repo.repo_path}.\n')
-                    raise e
-                if catcode_yaml_content is None:
-                    logger.error(f'Failed to find content for repository {repo.repo} at path {repo.repo_path}.')
-                c = yaml.safe_load(catcode_yaml_content)
+        # Fetch the content of catcode.yaml in the repository
+        try:
+            catcode_yaml_content = self.fetch_file_content(repo.repo, repo.repo_path, repo.user)
+        except Exception as e:
+            logger.exception(f'Failed to read config from repo {repo.repo} at path {repo.repo_path}.\n')
+            raise e
+        if catcode_yaml_content is None:
+            logger.error(f'Failed to find content for repository {repo.repo} at path {repo.repo_path}.')
+        c = yaml.safe_load(catcode_yaml_content)
 
-                entry = Application(**c)
-                entry.metadata.annotations['catcode.io/github-url'] = repo.url
-                entry.metadata.annotations['catcode.io/repo-path'] = Path(repo.repo_path).parent
-                configs.append(entry)
-        return configs
+        entry = Application(**c)
+        entry.metadata.annotations['catcode.io/github-url'] = repo.url
+        entry.metadata.annotations['catcode.io/repo-path'] = Path(repo.repo_path).parent
+        return entry
 
 
 if __name__ == '__main__':
-    import asyncio
-
     # Replace with your GitHub username, token, and the desired file name
     github_username = "MatiWall"
     github_token = ""

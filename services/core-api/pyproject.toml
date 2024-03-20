@@ -4,6 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Matias Wallenius <MatiWall@live.dk>"]
 readme = "README.md"
+packages = [
+    {include  = "core_api"}
+]
 
 [[tool.poetry.source]]
 name = "private"
@@ -24,6 +27,8 @@ httpx = "^0.26.0"
 extensions-configuration = "0.1.2"
 gitpython = "^3.1.41"
 extensions-opentelemetry = "^0.1.0"
+messaging-tools = "^0.1.0"
+apscheduler = "^3.10.4"
 
 
 [build-system]
