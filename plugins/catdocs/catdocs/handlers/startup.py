@@ -3,18 +3,17 @@ logger = logging.getLogger(__name__)
 
 from catdocs.cache import cache
 from catdocs.tools import repo_handler
-
+from catdocs.read_componnets import read_components
+from catdocs.queue import event_queue
 async def on_startup(event):
 
-    # Update cache
-    logger.debug('Updating cache on startup')
-    for comp in event.body:
-        cache.add(comp)
-    logger.debug('Finished updating cache on startup')
+    components = await read_components()
 
-    logger.info('Clone or update repositories')
-    for comp in event.body:
-        repo_handler.update_or_clone(comp)
-    logger.info('Finished cloning or update repositories')
+    for component in components:
+        event = Event(
+            type=EventType.UPDATED_COMPONENT,
+            body=component
+        )
+        await queue.put(event)
 
 

@@ -96,6 +96,18 @@ class TrackedPathsCache:
 
         return True
 
+    def remove(self, repo: Union[CatCodeRepoEntry, list[CatCodeRepoEntry]]):
+        if isinstance(repo, list):
+            for r in repo:
+                self.remove(r)
+        else:
+            if repo.name in self._cache.keys():
+                del self._cache[repo.name]
+            else:
+                logger.warning(f'File with id "{repo.name}" does not exist')
+    def get_all(self):
+        return self._cache
+
 
 
 tracked_paths = TrackedPathsCache()

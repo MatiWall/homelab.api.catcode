@@ -1,7 +1,11 @@
 from enum import StrEnum
 
-class Events(StrEnum):
+
+class Commands(StrEnum):
     LOOK_FOR_CHANGES = 'LOOK-FOR-CHANGES'
+class Events(StrEnum):
+
+    DELETED_COMPONENT = 'DELETED-COMPONENT'
     NEW_COMPONENT = 'NEW_COMPONENT'
     UPDATED_COMPONENT = 'UPDATED_COMPONENT'
     ON_START_UP = 'ON_START_UP'

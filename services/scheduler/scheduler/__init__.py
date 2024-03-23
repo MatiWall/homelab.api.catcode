@@ -1,4 +1,0 @@
-
-
-async def scheduler():
-    pass

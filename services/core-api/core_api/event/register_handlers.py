@@ -15,4 +15,4 @@ event_bus.subscribe(Events.NEW_COMPONENT, new_component)
 
 event_bus.subscribe(Events.UPDATED_COMPONENT, update_cache)
 event_bus.subscribe(Events.UPDATED_COMPONENT, externally_publish)
-event_bus.subscribe(Events.LOOK_FOR_CHANGES, check_for_updates)
+event_bus.subscribe(Commands.LOOK_FOR_CHANGES, check_for_updates)

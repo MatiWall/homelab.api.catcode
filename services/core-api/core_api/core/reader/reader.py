@@ -12,8 +12,8 @@ class RepositoryReader:
     def files(self):
         return self.reader.files()
 
-    def get_file_content(self):
-        return self.reader.get_file_content()
+    def get_file_content(self, repo):
+        return self.reader.get_file_content(repo)
 
 
 repo_reader = RepositoryReader(reader_implementation=GithubReader(username=config.username, token=config.github_token))
