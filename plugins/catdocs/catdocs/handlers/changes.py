@@ -1,10 +1,19 @@
+import logging
+
+from catdocs.events import EventType
+from catdocs.tools import repo_handler
+
+logger = logging.getLogger(__name__)
+
+from catdocs.parser import create_component_from_object
 from catdocs.queue import event_queue
-from catdocs.models import CatDocsComponent
 from catdocs.cache import cache
+
+from messaging_tools import Message
 
 async def on_component_created_or_changed(event):
 
-    body  = event.body
+    body = event.body
 
     comp = create_component_from_object(body)
     # Update cache
@@ -17,7 +26,7 @@ async def on_component_created_or_changed(event):
     logger.info('Finished cloning or update repositories')
 
     await event_queue.put(
-            Event(
+            Message(
                 type=EventType.BUILD_DOCS,
                 body=comp
             )

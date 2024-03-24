@@ -1,16 +1,12 @@
 from messaging_tools import Message
 from core_api.event.event_bus import event_bus
-from core_api.event.queue import queue
+from core_api.event.handlers import on_start_up
+from core_api.event.message_broker import consume_message
 from core_api.event.events import Events
 
 
 async def service():
-    on_startup_event = Message(
-        type=Events.ON_START_UP
-    )
-    await event_bus.emit(on_startup_event)
+    await on_start_up()
 
-    while True:
-        # Wait for an event and process it
-        event = await queue.get()
-        await event_bus.emit(event)
+
+    await consume_message(event_bus)

@@ -5,7 +5,6 @@ from catdocs.parser import create_component_from_object
 logger = logging.getLogger(__name__)
 
 import httpx
-from catdocs.models import CatDocsComponent
 
 from settings import config
 
@@ -27,7 +26,7 @@ async def read_components():
         if comp['metadata'].get('annotations', {}).get(config.catdocs_build_annotation):
 
             comps.append(
-                create_component_from_object(comp)
+                comp
             )
 
     return comps

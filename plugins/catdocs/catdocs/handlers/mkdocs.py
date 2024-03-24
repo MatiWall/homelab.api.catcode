@@ -1,4 +1,7 @@
 import logging
+
+from catdocs.filesystem import rm_folder
+
 logger = logging.getLogger(__name__)
 
 from pathlib import Path
@@ -27,6 +30,15 @@ async def move_docs(event):
 
     # Create the build directory if it doesn't exist
     final_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Check if file already exists in final location and delete it if it does
+    if final_path.exists():
+        try:
+            rm_folder(final_path)
+            logger.debug(f'Removed existing file at {final_path}')
+        except Exception as e:
+            logger.exception(f'Failed to remove existing file at {final_path}: {e}')
+            return  # Stop execution if deletion fails
 
     # Move the file
     try:

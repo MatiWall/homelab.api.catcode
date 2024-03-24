@@ -1,3 +1,9 @@
+import logging
+
+from catdocs.events import EventType
+
+logger = logging.getLogger(__name__)
+
 import settings
 from catdocs.cache import cache
 from catdocs.tools import repo_handler

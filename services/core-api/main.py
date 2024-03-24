@@ -43,5 +43,11 @@ app.include_router(application_router)
 app.include_router(stat_router)
 
 if __name__ == '__main__':
+    logging.getLogger("pika").setLevel(logging.ERROR)
+    logging.getLogger("aiormq").setLevel(logging.ERROR)
+    logging.getLogger("aio_pika").setLevel(logging.ERROR)
+    logging.getLogger("httpcore").setLevel(logging.ERROR)
+    logging.getLogger("httpx").setLevel(logging.ERROR)
+
     logger.info('CatCode core core_api starting up')
     uvicorn.run('main:app')

@@ -12,3 +12,13 @@ def create_folders_if_not_exist(path):
         print(f"Folders created at path: {path}")
     except Exception as e:
         print(f"Failed to create folders at path: {path}. Error: {e}")
+
+def rm_folder(root: Path):
+
+    for p in root.iterdir():
+        if p.is_dir():
+            rm_folder(p)
+        else:
+            p.unlink()
+
+    root.rmdir()

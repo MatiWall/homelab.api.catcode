@@ -1,44 +1,50 @@
 import logging
-logger = logging.getLogger(__name__)
 
+from core_api.core.reader.models import CatCodeRepoEntry
+from core_api.event.message_broker import produce_message
+
+logger = logging.getLogger(__name__)
+from messaging_tools import Message
 from core_api.core.componentcache import cache, tracked_paths
 from core_api.event.events import Events
 from core_api.core.reader import repo_reader
-async def check_for_updates(event):
-    files = repo_reader.get_files()
+
+async def check_for_updates():
+    files = repo_reader.files()
     for file in files:
         resp = tracked_paths.add(file)
 
         if resp in ('New', 'Updated'):
-            event = Event(
-                type=Events.UPDATED_COMPONENT,
+            logger.info(f'Component changed {file}')
+            event = Message(
+                type=Events.COMPONENT_UPDATED,
                 body=file
             )
-            await queue.put(event)
+            await produce_message(event)
 
     repos = set([file.name for file in files])
     cached_repos = set(tracked_paths.get_all().keys())
     deleted_repos = cached_repos - repos
-    try:
-        tracked_paths.remove(list(deleted_repos))
-    except Exception as e:
-        logger.exception(f'Failed to remove deleted components with error:\n')
-        return
+    if len(list(deleted_repos)) > 0:
+        try:
+            tracked_paths.remove(list(deleted_repos))
+            logger.info(f'Deleted component {list[deleted_repos]}')
+        except Exception as e:
+            logger.exception(f'Failed to remove deleted components with error:\n')
+            return
 
-    for deleted_file in [file for file in files if file.name in deleted_repos]:
-        event = Events(
-            type=Events.DELETED_COMPONENT,
-            body=deleted_file
-        )
-        await queue.put(event)
+        for deleted_file in [file for file in files if file.name in deleted_repos]:
+            event = Message(
+                type=Events.COMPONENT_DELETED,
+                body=deleted_file
+            )
+            await produce_message(event)
 
 
 
 async def update_cache(event):
-    logger.debug(f'Updating cache with component {event.body}')
-    component = repo_reader.get_file_content(event.body)
+    repo = CatCodeRepoEntry(**event.body)
+    logger.debug(f'Updating cache with component {repo}')
+
+    component = repo_reader.get_file_content(repo)
     cache.add(component)
-
-
-async def externally_publish(event):
-    print('Submit to rabbitmq')
