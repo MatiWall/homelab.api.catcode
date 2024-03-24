@@ -1,8 +1,7 @@
 from pathlib import Path
-from pydantic import BaseModel
 
-from catdocs.filesystem import rm_folder
-from catdocs.repository.reader import GitHandler
+from catdocs.core.filesystem import rm_folder
+from catdocs.core.repository.reader import GitHandler
 class RepoHandler:
     def __init__(self, base_path: Path, reader: GitHandler):
         self.base_path = base_path

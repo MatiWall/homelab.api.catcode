@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    ports:
+      - "5672:5672"     # RabbitMQ default port
+      - "15672:15672"   # RabbitMQ Management UI port
+# core-api:
+#   build: ./services/core-api
+#    ports:
+#      - "8000:8000"
+  
+#  catdocs:
+#    build: ./plugins/catdocs
+#    ports: 
+#      - "8002:8002"
+
+#  dependencies:
+#    build: ./plugins/dependencies
+#    ports:
+#      - "8001:8001"

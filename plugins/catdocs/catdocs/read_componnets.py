@@ -1,7 +1,5 @@
 import logging
 
-from catdocs.parser import create_component_from_object
-
 logger = logging.getLogger(__name__)
 
 import httpx

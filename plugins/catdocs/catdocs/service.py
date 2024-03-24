@@ -1,23 +1,13 @@
-import asyncio
-from event_tools import Event
+from catdocs.core.events import event_bus
+from catdocs.core.events.handlers import on_startup
+from catdocs.core.events.event_bus import event_bus
 
-from catdocs import event_bus
-from catdocs.events import EventType
-from catdocs.event_bus import event_bus
-from catdocs.queue import event_queue
+from catdocs.core.events.message_broker import consume_message
 
-
-from settings import BASE_DIR
 
 async def service():
 
-    on_startup_event = Event(
-        type=EventType.ON_STARTUP,
-    )
-    await event_bus.emit(on_startup_event)
+    await on_startup()
 
-    while True:
-        # Wait for an event and process it
-        event = await event_queue.get()
-        await event_bus.emit(event)
+    await consume_message(event_bus)
 
