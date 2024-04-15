@@ -3,3 +3,13 @@ catalog:
     - source: github
       user: MatiWall
       file: "catcode.yaml"
+
+packages:
+  coreApi:
+    url: http://127.0.0.1:8000/
+  dependencies:
+    url: http://127.0.0.1:8001/
+
+plugins:
+  catdocs:
+    url: http://127.0.0.1:8002
