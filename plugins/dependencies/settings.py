@@ -1,4 +1,6 @@
+from pathlib import Path
 from extensions.configuration import read_configs_to_dataclass
 
+BASE_DIR = Path(__file__).resolve().parent
 
-config = read_configs_to_dataclass()
+config = read_configs_to_dataclass(path=BASE_DIR)

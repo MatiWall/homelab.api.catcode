@@ -22,9 +22,6 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
 COPY . .
 
-# Make port 8080 available to the world outside this container
-EXPOSE 8000
-
 # Define environment variable
 ENV NAME World
 

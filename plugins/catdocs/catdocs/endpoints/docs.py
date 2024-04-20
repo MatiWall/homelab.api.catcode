@@ -16,8 +16,8 @@ def return_static_css(system, application, deployableUnit):
         return {"message": "Documentation file not found"}
 @router.get('/{system}/{application}/{deployableUnit}/{path:path}')
 def return_html_docs(system, application, deployableUnit, path):
-
-    file_path = settings.BASE_DIR / f'builds/{system}.{application}.{deployableUnit}/site/{path}'
+    print(system, application, deployableUnit, path)
+    file_path = settings.BASE_DIR / f'builds/{system}.{application}.{deployableUnit}/site/{path}/index.html'
     try:
         with file_path.open('r') as file:
             html_content = file.read()

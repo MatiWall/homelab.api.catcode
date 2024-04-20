@@ -12,9 +12,8 @@ from catdocs.cache import cache
 
 async def on_component_created_or_changed(event):
 
-    body = event.body
-
-    comp = create_component_from_object(body)
+    comp = event['body']
+    comp = create_component_from_object(comp)
     # Update cache
     logger.debug('Updating cache on startup')
     cache.add(comp)

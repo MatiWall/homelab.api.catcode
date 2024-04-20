@@ -9,7 +9,7 @@ from settings import config
 
 async def read_components():
 
-    async with httpx.AsyncClient(follow_redirects=True) as client:
+    async with httpx.AsyncClient(follow_redirects=True, timeout=10) as client:
         resp = await client.get(config.core_api+'/catalog')
 
     if resp.status_code < 300:

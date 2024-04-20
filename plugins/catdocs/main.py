@@ -1,5 +1,6 @@
 import asyncio
 
+from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,8 +8,15 @@ from catdocs.service import service
 
 from catdocs.endpoints.docs import router as docs_router
 
+import settings
 
-app = FastAPI()
+@asynccontextmanager
+async def startup_event(*args, **kwargs):
+    asyncio.create_task(service())
+    yield
+
+
+app = FastAPI(lifespan=startup_event)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,9 +26,6 @@ app.add_middleware(
 )
 
 app.include_router(docs_router)
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(service())
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", port=8002)
+    uvicorn.run("main:app", port=8002, host='0.0.0.0')

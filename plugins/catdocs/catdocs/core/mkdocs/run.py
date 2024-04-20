@@ -41,11 +41,11 @@ class MKDocs:
             raise
 
     @staticmethod
-    def move_docs(event):
-        initial_path = settings.BASE_DIR / f'tmp/{event.body["name"]}/site'
-        final_path = settings.BASE_DIR / f'builds/{event.body["name"]}/site'
+    def move_docs(comp):
+        initial_path = settings.BASE_DIR / f'tmp/{comp.name}/site'
+        final_path = settings.BASE_DIR / f'builds/{comp.name}/site'
 
-        logger.debug(f'Moving {event.body["name"]} from {initial_path} to {final_path}')
+        logger.debug(f'Moving {comp.name} from {initial_path} to {final_path}')
 
         # Create the build directory if it doesn't exist
         final_path.parent.mkdir(parents=True, exist_ok=True)
@@ -63,6 +63,6 @@ class MKDocs:
         try:
             path = Path(initial_path)
             path.rename(final_path)
-            logger.debug(f'Successfully moved {event.body["name"]} from {initial_path} to {final_path}')
+            logger.debug(f'Successfully moved {comp.name} from {initial_path} to {final_path}')
         except Exception as e:
-            logger.exception(f'Failed to move {event.body["name"]} from {initial_path} to {final_path}: {e}')
+            logger.exception(f'Failed to move {comp.name} from {initial_path} to {final_path}: {e}')
