@@ -28,6 +28,7 @@ mkdocstrings = "^0.24.1"
 event-tools = "0.1.2"
 extensions-rabbitmq = "^0.1.0"
 messaging-tools = "^0.1.0"
+mkdocs = "^1.6.0"
 
 
 [build-system]

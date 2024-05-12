@@ -22,6 +22,8 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
 COPY . .
 
+# Install Git
+RUN apt-get update && apt-get install -y git
 # Define environment variable
 ENV NAME World
 
