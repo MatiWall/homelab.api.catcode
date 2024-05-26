@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM python:3.11-slim AS builder
+FROM docker-registry.mw.local/python:3.12-2 AS builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -8,12 +8,10 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock /app/
 
 # Install Poetry
-RUN pip install --no-cache-dir poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-dev
+RUN poetry install --no-dev
 
 # Stage 2: Final image
-FROM python:3.11-slim
+FROM docker-registry.mw.local/python:3.12-2
 
 # Set the working directory in the container
 WORKDIR /app
