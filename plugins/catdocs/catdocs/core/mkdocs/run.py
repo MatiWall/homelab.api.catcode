@@ -31,7 +31,7 @@ class MKDocs:
             # Change directory to the folder path
             os.chdir(folder_path)
             # Run MkDocs build command
-            output = subprocess.run(["mkdocs", "build"])
+            output = subprocess.run(["python", "-m", "mkdocs", "build"])
             if output.returncode == 0:
                 logger.info("MkDocs build completed successfully.")
             else:

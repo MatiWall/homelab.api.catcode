@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "7"
+name = "catcode-backend-coreapi"
 version = "0.1.0"
 description = ""
 authors = ["Matias Wallenius <MatiWall@live.dk>"]
@@ -8,7 +8,7 @@ package-mode = false
 
 [[tool.poetry.source]]
 name = "private"
-url = "http://pypi.mw"
+url = "http://pypi.mw.local"
 priority = "primary"
 
 
