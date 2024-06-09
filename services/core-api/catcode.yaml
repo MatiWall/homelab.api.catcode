@@ -4,7 +4,7 @@ metadata:
   system: catcode
   application: backend
   deployableUnit: coreapi
-  version: 0.1.0
+  version: 0.1.1
   tags:
   - python
   - core_api
@@ -19,4 +19,3 @@ spec:
   type: service
   lifecycle: development
   owner: mw
-
