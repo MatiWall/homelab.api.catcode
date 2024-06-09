@@ -26,16 +26,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     logging.error(f"{request}: {exc_str}")
     content = {'status_code': 10422, 'message': exc_str, 'data': None}
     return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-class StripPrefixMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        # Modify request URL path to strip /api/v1/core-api
-        request.scope['path'] = request.scope['path'].replace('/api/v1/core-api', '', 1)
-        response = await call_next(request)
-        return response
-
-# Apply the middleware to your FastAPI app
-app.add_middleware(StripPrefixMiddleware)
 # Allow all origins, allow all methods, allow all headers
 app.add_middleware(
     CORSMiddleware,
@@ -50,8 +40,10 @@ async def startup_event():
     asyncio.create_task(service())
     scheduler.start()
 
-app.include_router(application_router)
-app.include_router(stat_router)
+prefix = '/api/v1/core-api'
+
+app.include_router(application_router, prefix=prefix)
+app.include_router(stat_router, prefix=prefix)
 if __name__ == '__main__':
     logging.getLogger("pika").setLevel(logging.ERROR)
     logging.getLogger("aiormq").setLevel(logging.ERROR)
