@@ -3,7 +3,8 @@ metadata:
   description: Backend for catcode.
   system: catcode
   application: backend
-  deployableUnit: core-data
+  deployableUnit: coreapi
+  version: 0.1.0
   tags:
   - python
   - core_api
@@ -11,7 +12,7 @@ metadata:
   links:
   - title: Telemetry
     icon: grafana
-    url: http://grafana.mw
+    url: http://grafana.mw.local/
   - title: example
     url: https://www.example.com
 spec:
