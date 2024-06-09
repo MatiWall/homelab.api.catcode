@@ -1,2 +1,2 @@
 username: MatiWall
-rabbitmq_url: 'amqp://guest:guest@rabbitmq.mw/'
+rabbitmq_url: 'amqp://guest:guest@rabbitmq.mw.local/'

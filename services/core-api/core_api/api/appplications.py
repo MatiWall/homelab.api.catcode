@@ -17,7 +17,7 @@ class ApplicationCatalog(BaseModel):
 class Applications(BaseModel):
     apps: list[Application]
 
-@router.get('/')
+@router.get('')
 def get_applications():
     configs = cache.get()
 
