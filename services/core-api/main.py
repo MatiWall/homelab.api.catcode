@@ -1,5 +1,8 @@
 import asyncio
 import logging
+
+from starlette.middleware.base import BaseHTTPMiddleware
+
 logger = logging.getLogger(__name__)
 
 from core_api import scheduler
@@ -24,7 +27,15 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     content = {'status_code': 10422, 'message': exc_str, 'data': None}
     return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+class StripPrefixMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        # Modify request URL path to strip /api/v1/core-api
+        request.scope['path'] = request.scope['path'].replace('/api/v1/core-api', '', 1)
+        response = await call_next(request)
+        return response
 
+# Apply the middleware to your FastAPI app
+app.add_middleware(StripPrefixMiddleware)
 # Allow all origins, allow all methods, allow all headers
 app.add_middleware(
     CORSMiddleware,
