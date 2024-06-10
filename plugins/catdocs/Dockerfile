@@ -1,31 +1,13 @@
-# Stage 1: Build stage
-FROM python:3.11-slim AS builder
+FROM docker-registry.mw.local/python:3.12-3
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy only the dependencies definition files
 COPY pyproject.toml poetry.lock /app/
 
-# Install Poetry
-RUN pip install --no-cache-dir poetry
-RUN poetry config virtualenvs.create false
-RUN poetry install
+RUN poetry install --no-dev
 
-# Stage 2: Final image
-FROM python:3.11-slim
+COPY . /app
 
-# Set the working directory in the container
-WORKDIR /app
+EXPOSE 8000
 
-# Copy the application code from the builder stage
-COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
-COPY . .
-
-# Install Git
-RUN apt-get update && apt-get install -y git
-# Define environment variable
-ENV NAME World
-
-# Run app.py when the container launches
-CMD ["python", "main.py"]
+CMD ["poetry", "run", "python", "main.py"]
