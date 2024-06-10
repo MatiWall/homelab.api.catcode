@@ -14,6 +14,7 @@ app.add_middleware(
 )
 
 
-app.include_router(router)
+prefix = '/api/dependencies/v1'
+app.include_router(router, prefix=prefix)
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8001, host='0.0.0.0')
