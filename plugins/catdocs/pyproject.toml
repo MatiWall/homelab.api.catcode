@@ -7,7 +7,7 @@ readme = "README.md"
 
 [[tool.poetry.source]]
 name = "private"
-url = "http://pypi.mw"
+url = "http://pypi.mw.local"
 priority = "primary"
 
 
