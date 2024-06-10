@@ -40,7 +40,7 @@ async def startup_event():
     asyncio.create_task(service())
     scheduler.start()
 
-prefix = '/api/v1/core-api'
+prefix = '/api/core-api/v1'
 
 app.include_router(application_router, prefix=prefix)
 app.include_router(stat_router, prefix=prefix)
