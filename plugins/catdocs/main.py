@@ -12,9 +12,14 @@ import settings
 
 @asynccontextmanager
 async def startup_event(*args, **kwargs):
-    asyncio.create_task(service())
+    task = asyncio.create_task(service())
     yield
-
+    # Shutdown event
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
 
 app = FastAPI(lifespan=startup_event)
 app.add_middleware(
@@ -25,7 +30,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(docs_router)
+prefix = '/api/catdocs/v1'
+app.include_router(docs_router, prefix=prefix)
 
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8002, host='0.0.0.0')
