@@ -11,7 +11,7 @@ from catdocs.core.events.message_broker import consume_message
 async def service():
 
 
-    await on_startup()
+    await on_startup(event_bus)
 
     logger.info('Starting to consume queue for new events.')
     await consume_message(event_bus)

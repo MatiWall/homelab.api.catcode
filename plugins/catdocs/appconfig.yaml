@@ -1,6 +1,6 @@
-core_api: http://catcode.backend.core-api.mw
+core_api: http://catcode.mw.local/api/core-api/v1
 catdocs_build_annotation: catcode.io/catdocs-build
 catdocs_path_annotation: catcode.io/catdocs-path
 catcode_repo_path_annotation: catcode.io/repo-path
 catcode_url_annotation: catcode.io/github-url
-rabbitmq_url: 'amqp://guest:guest@rabbitmq.mw.local/'
+rabbitmq_url: 'amqp://guest:guest@rabbitmq.mw.local'
