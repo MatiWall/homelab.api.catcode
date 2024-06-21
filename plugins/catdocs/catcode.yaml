@@ -4,7 +4,7 @@ metadata:
   system: catcode
   application: backend
   deployableUnit: catdocs
-  version: 0.1.3
+  version: 0.1.4
   tags:
   - python
   - backend
