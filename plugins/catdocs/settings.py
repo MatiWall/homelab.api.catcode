@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from extensions.configuration import read_configs_to_dataclass, hosting_environment
@@ -14,5 +15,6 @@ configure_logging(
 
 config = read_configs_to_dataclass(BASE_DIR)
 
-
+logging.getLogger('aio_pika').setLevel(30)
+logging.getLogger('aiormq').setLevel(30)
 

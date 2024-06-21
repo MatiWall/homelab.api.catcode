@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 from pathlib import Path
 
 from catdocs.core.filesystem import rm_folder
@@ -17,7 +19,10 @@ class RepoHandler:
         return (self.base_path / path).exists()
 
     def update_or_clone(self, comp):
-        if (self.base_path / comp.name).exists():
-            self.reader.update(self.base_path / comp.name)
+        path = (self.base_path / comp.name)
+        if path.exists():
+            logger.debug(f'Pulling changes to existing repo {path}')
+            self.reader.update(path)
         else:
-            self.reader.clone(comp, self.base_path/comp.name)
+            logger.debug(f'Cloning repo {path}')
+            self.reader.clone(comp, path)
