@@ -39,6 +39,10 @@ class GithubReader:
                     user=item['repository']['owner']['login'],
                     url=item['repository']['url'],
                 ) for item in data['items']]
+
+            logger.info(f'Found {len(file_paths)} repos:')
+            for f in file_paths:
+                logger.debug(f'Found {f}')
             return file_paths
         else:
             logger.error("Error occurred while fetching data from GitHub API.")

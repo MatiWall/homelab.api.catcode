@@ -5,7 +5,7 @@ from settings import config
 class RepositoryReader:
     def __init__(
             self,
-            reader_implementation
+            reader_implementation: GithubReader
     ):
         self.reader = reader_implementation
 

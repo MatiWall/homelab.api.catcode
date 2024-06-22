@@ -7,5 +7,6 @@ BASE_DIR = Path(__file__).parent
 config = read_configs_to_dataclass(BASE_DIR)
 
 configure_logging(
-   enable_otel=hosting_environment.is_production()
+   enable_otel=hosting_environment.is_production(),
+   level=config.logging_level
 )

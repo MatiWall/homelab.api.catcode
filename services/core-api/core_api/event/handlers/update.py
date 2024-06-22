@@ -10,6 +10,8 @@ from core_api.event.events import Events
 from core_api.core.reader import repo_reader
 
 async def check_for_updates():
+    logger.debug('Checking for updated')
+
     files = repo_reader.files()
     for file in files:
         resp = tracked_paths.add(file)
