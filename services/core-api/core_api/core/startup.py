@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 from core_api.core.reader import repo_reader
 
 async def on_start_up():
-    logger.info('Reading components on startup and creating COMPONENT_CREATED events for initialization.')
+    logger.info('Start up initiated')
     repos = repo_reader.files()
 
 
@@ -18,3 +18,4 @@ async def on_start_up():
         logger.debug(f'Updating cache with component {repo}')
         component = repo_reader.get_file_content(repo)
         cache.add(component)
+    logger.info('Finished start up initialization.')

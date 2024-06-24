@@ -1,7 +1,10 @@
 import logging
-
+import ast
+import yaml
+import imp
 import settings
 from catdocs.core.filesystem import rm_folder
+from catdocs.models import CatDocsComponent
 
 logger = logging.getLogger(__name__)
 
@@ -9,11 +12,85 @@ import os
 from pathlib import Path
 import subprocess
 
+
 class MKDocs:
     def __init__(self, base_path: Path):
         self.base_path = base_path
 
-    def build(self, comp):
+    def default_config(self):
+        config_data = {
+            'site_name': 'MyTestProject Documentation',
+            'plugins': [
+                'search',
+                {
+                    'mkdocstrings': {
+                        'default_handler': 'python',
+                        'handlers': {
+                            'python': {
+                                'options': {
+                                    'show_source': True,
+                                    'docstring_style': 'numpy'
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            'theme': {
+                'name': 'material'
+            }
+        }
+
+        return config_data
+
+    def create_mkdocs_config_if_not_exists(self, comp):
+
+        file = (self.base_path / f'{comp.name}/mkdocs.yaml')
+
+        if file.exists():
+            return
+
+        with (self.base_path / f'{comp.name}/mkdocs.yaml').open('w') as f:
+            yaml.dump(self.default_config(), f, default_flow_style=False)
+
+    def create_docs(self, comp: CatDocsComponent):
+        path = self.base_path / comp.name
+        python_files = list(path.glob('**/*.py'))
+
+        logger.debug(f'Creating docs folder in path {path}')
+        docs_folder = path / f'docs'
+        docs_folder.mkdir(exist_ok=True)
+        logger.debug(f'Successfully created docs folder in path {docs_folder}')
+
+        for file in python_files:
+            relative_path = str(file).split(comp.name)[1]
+            relative_path = relative_path.strip('/')
+
+            docs_path = (docs_folder / relative_path)
+            docs_path.parent.mkdir(exist_ok=True, parents=True)
+
+            if docs_path.name == '__init__.py':
+                _f = (docs_path.parent.parent / 'index.md')
+                _f.touch(exist_ok=True)
+            else:
+                _f = docs_path.with_suffix('.md')
+                _f.touch(exist_ok=True)
+
+            members = extract_names_in_order(file)
+            module_path = str(Path(relative_path).with_suffix('')).replace('/', '.')
+            if not members:
+                continue
+
+            with _f.open('w') as f:
+                f.write(f':::{module_path}\n\n')
+
+                for members in members:
+                    name = members[1]
+                    f.write(f':::{module_path}.{name}\n\n')
+
+        pass
+
+    def build(self, comp: CatDocsComponent):
         """
            Run MkDocs on a given folder.
 
@@ -24,13 +101,14 @@ class MKDocs:
             folder_path = self.base_path / comp.name
 
             # Check if mkdocs.yml exists in the folder
-            if not (folder_path / "mkdocs.yml").is_file():
-                logger.info(f"Error: mkdocs.yml not found in {folder_path}.")
+            if not (folder_path / "mkdocs.yaml").is_file():
+                logger.error(f"Error: mkdocs.yml not found in {folder_path}.")
                 return
 
             # Change directory to the folder path
             os.chdir(folder_path)
             # Run MkDocs build command
+            logger.info(f'Building documentation for component {comp.name}')
             output = subprocess.run(["python", "-m", "mkdocs", "build"])
             if output.returncode == 0:
                 logger.info("MkDocs build completed successfully.")
@@ -41,7 +119,7 @@ class MKDocs:
             raise
 
     @staticmethod
-    def move_docs(comp):
+    def move_docs(comp: CatDocsComponent):
         initial_path = settings.BASE_DIR / f'tmp/{comp.name}/site'
         final_path = settings.BASE_DIR / f'builds/{comp.name}/site'
 
@@ -66,3 +144,23 @@ class MKDocs:
             logger.debug(f'Successfully moved {comp.name} from {initial_path} to {final_path}')
         except Exception as e:
             logger.exception(f'Failed to move {comp.name} from {initial_path} to {final_path}: {e}')
+
+
+def extract_names_in_order(file_path):
+    # Read the content of the file
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    # Parse the content as an Abstract Syntax Tree (AST)
+    tree = ast.parse(content, filename=file_path)
+
+    names_in_order = []
+
+    # Visit each node in the AST
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            names_in_order.append(('function', node.name))
+        elif isinstance(node, ast.ClassDef):
+            names_in_order.append(('class', node.name))
+
+    return names_in_order

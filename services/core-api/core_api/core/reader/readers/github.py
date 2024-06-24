@@ -1,4 +1,5 @@
 import logging
+import time
 from pathlib import Path
 
 import httpx
@@ -24,29 +25,52 @@ class GithubReader:
 
         # GitHub API search query for the specified file
         query = f"filename:{self.tracked_file} user:{self.username}"
-        params = {"q": query, "per_page": 9999}  # Adjust per_page as needed
+        params = {"q": query, "per_page": 30}  # Adjust per_page as needed
 
-        # Send HTTP GET request to GitHub API
-        response = httpx.get(api_url, headers=headers, params=params)
-        if response.status_code == 200:
-            # Extract file paths from the response
-            data = response.json()
-            file_paths = [
-                CatCodeRepoEntry(
-                    repo=item['repository']['name'],
-                    repo_path=item['path'],
-                    sha=item['sha'],
-                    user=item['repository']['owner']['login'],
-                    url=item['repository']['url'],
-                ) for item in data['items']]
+        page = 1
+        file_paths = []
+        while True:
+            params['page'] = page
+            logger.debug(f"Fetching page {page} with params: {params}")
+            # Send HTTP GET request to GitHub API
+            response = httpx.get(api_url, headers=headers, params=params)
+            if response.status_code == 200:
+                data = response.json()
 
-            logger.info(f'Found {len(file_paths)} repos:')
-            for f in file_paths:
-                logger.debug(f'Found {f}')
-            return file_paths
-        else:
-            logger.error("Error occurred while fetching data from GitHub API.")
-            return None
+                logger.debug(f"Page {page} response: {data}")
+
+                if 'items' not in data or len(data['items']) == 0:
+                    logger.debug("No more items found, breaking loop.")
+                    break
+
+                new_file_paths = [
+                    CatCodeRepoEntry(
+                        repo=item['repository']['name'],
+                        repo_path=item['path'],
+                        sha=item['sha'],
+                        user=item['repository']['owner']['login'],
+                        url=item['repository']['url'],
+                    ) for item in data['items']]
+
+                file_paths.extend(new_file_paths)
+                logger.debug(f"Collected {len(new_file_paths)} new items, total so far: {len(file_paths)}")
+
+                if len(data['items']) < 100:
+                    logger.debug("Less than 100 items in this page, assuming no more pages.")
+                    break
+
+                page += 1
+                # To respect GitHub API rate limits
+                time.sleep(1)
+            else:
+                logger.error(f"Error occurred while fetching data from GitHub API: {response.status_code}")
+                logger.error(f"Response: {response.text}")
+                return None
+
+        logger.info(f'Found {len(file_paths)} repos:')
+        for f in file_paths:
+            logger.debug(f'Found {f}')
+        return file_paths
 
 
     def files(self):

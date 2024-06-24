@@ -33,4 +33,6 @@ async def read_components():
             logger.debug(
                 f'No catdocs annotation for component {create_name(comp)}')
 
+    logger.info(f'Found catdocs annotation for {len(comps)} components: \n{" ,".join([create_name(comp) for comp in comps])}')
+
     return comps
