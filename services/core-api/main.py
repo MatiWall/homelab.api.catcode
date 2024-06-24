@@ -1,22 +1,22 @@
 import asyncio
 import logging
+logger = logging.getLogger(__name__)
 
 from starlette.middleware.base import BaseHTTPMiddleware
 
-logger = logging.getLogger(__name__)
+from core_api.core.startup import on_start_up
 
 from core_api import scheduler
 
 from fastapi import FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 import uvicorn
 
 
 from core_api.api.appplications import router as application_router
 from core_api.api.statistics import router as stat_router
-from core_api.service import service
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 app = FastAPI()
 
 
@@ -37,7 +37,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    asyncio.create_task(service())
+    await on_start_up()
     scheduler.start()
 
 prefix = '/api/core-api/v1'

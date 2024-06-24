@@ -18,9 +18,11 @@ async def check_for_updates():
 
         if resp in ('New', 'Updated'):
             logger.info(f'Component changed {file}')
+            component = repo_reader.get_file_content(file)
+            cache.add(component)
             event = Message(
                 type=Events.COMPONENT_UPDATED,
-                body=file
+                body=component
             )
             await produce_message(event)
 
@@ -30,6 +32,7 @@ async def check_for_updates():
     if len(list(deleted_repos)) > 0:
         try:
             tracked_paths.remove(list(deleted_repos))
+            cache.remove(component)
             logger.info(f'Deleted component {list[deleted_repos]}')
         except Exception as e:
             logger.exception(f'Failed to remove deleted components with error:\n')
@@ -41,12 +44,3 @@ async def check_for_updates():
                 body=deleted_file
             )
             await produce_message(event)
-
-
-
-async def update_cache(event):
-    repo = CatCodeRepoEntry(**event.body)
-    logger.debug(f'Updating cache with component {repo}')
-
-    component = repo_reader.get_file_content(repo)
-    cache.add(component)

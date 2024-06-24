@@ -1,7 +1,7 @@
 import logging
-import asyncio
 
-from core_api.event.handlers import check_for_updates
+from core_api.core.update import check_for_updates
+
 
 logger = logging.getLogger(__name__)
 

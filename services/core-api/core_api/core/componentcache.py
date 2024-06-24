@@ -1,4 +1,7 @@
 import logging
+
+from core_api.core.models import Application
+
 logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Optional, Union
@@ -38,7 +41,7 @@ class ComponentCache:
         self.path = path
         self._cache = {}
 
-    def add(self, component):
+    def add(self, component: Application):
         self._cache[(
             component.metadata.system,
             component.metadata.application,
@@ -46,6 +49,13 @@ class ComponentCache:
         ] = component
         return True
 
+    def remove(self, component: Application):
+        del self._cache[(
+            component.metadata.system,
+            component.metadata.application,
+            component.metadata.deployable_unit
+        )]
+        return True
     def get_all(self):
         """
         Retrieve all data from the file system.
