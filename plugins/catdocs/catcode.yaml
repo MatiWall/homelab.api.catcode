@@ -12,9 +12,11 @@ metadata:
   - title: Telemetry
     icon: grafana
     url: http://grafana.mw.local/
-  - title: example
-    url: https://www.example.com
+  annotations:
+    catcode.io/dependencies: true
 spec:
   type: service
   lifecycle: development
   owner: mw
+  dependencies:
+  - catcode.backend.coreapi

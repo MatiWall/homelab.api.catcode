@@ -10,9 +10,11 @@ metadata:
   - api
   - backend
   - dependencies
+  annotations:
+        catcode.io/dependencies: true
 spec:
   type: catcode-backend
   lifecycle: development
   owner: mw
   dependencies:
-  - catcode.backend.core-data
+  - catcode.backend.coreapi
