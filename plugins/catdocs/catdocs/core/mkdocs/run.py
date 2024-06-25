@@ -1,7 +1,6 @@
 import logging
 import ast
 import yaml
-import imp
 import settings
 from catdocs.core.filesystem import rm_folder
 from catdocs.models import CatDocsComponent
