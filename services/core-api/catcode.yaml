@@ -1,10 +1,11 @@
 kind: Component
 metadata:
-  description: Core backend for catcode. Holds cache of catalog entities and monitor git repos and emit event on changes.
+  description: Core backend for catcode. Holds cache of catalog entities and monitor
+    git repos and emit event on changes.
   system: catcode
   application: backend
   deployableUnit: coreapi
-  version: 0.1.6
+  version: 0.1.7
   tags:
   - python
   - core_api
