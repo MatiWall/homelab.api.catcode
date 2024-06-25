@@ -53,7 +53,7 @@ def return_static_css(system: str, application: str, deployableUnit: str):
         raise HTTPException(status_code=500, detail="Error reading the CSS file")
 @router.get('/{system}/{application}/{deployableUnit}/{path:path}')
 def return_html_docs(system, application, deployableUnit, path):
-    print(system, application, deployableUnit, path)
+
     file_path = settings.BASE_DIR / f'builds/{system}.{application}.{deployableUnit}/site/{path}/index.html'
     try:
         with file_path.open('r') as file:

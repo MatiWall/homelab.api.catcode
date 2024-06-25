@@ -1,5 +1,7 @@
 import logging
 import ast
+import shutil
+
 import yaml
 import settings
 from catdocs.core.filesystem import rm_folder
@@ -16,9 +18,9 @@ class MKDocs:
     def __init__(self, base_path: Path):
         self.base_path = base_path
 
-    def default_config(self):
+    def default_config(self, comp):
         config_data = {
-            'site_name': 'MyTestProject Documentation',
+            'site_name': comp.name.replace('.', ' ').title(),
             'plugins': [
                 'search',
                 {
@@ -50,7 +52,7 @@ class MKDocs:
             return
 
         with (self.base_path / f'{comp.name}/mkdocs.yaml').open('w') as f:
-            yaml.dump(self.default_config(), f, default_flow_style=False)
+            yaml.dump(self.default_config(comp), f, default_flow_style=False)
 
     def create_docs(self, comp: CatDocsComponent):
         path = self.base_path / comp.name
@@ -60,6 +62,19 @@ class MKDocs:
         docs_folder = path / f'docs'
         docs_folder.mkdir(exist_ok=True)
         logger.debug(f'Successfully created docs folder in path {docs_folder}')
+
+        # Create default index
+
+        if (docs_folder / 'index.md').exists():
+            pass
+        elif (path/ 'README.md').exists():
+            shutil.copy((path/ 'README.md'), docs_folder / 'index.md')
+        else:
+            with (docs_folder / 'index.md').open('w') as f:
+                f.write(f'# {comp.name}\n')
+                f.write(f'Welcome to the automatically generated documentation for {comp.name}')
+
+
 
         for file in python_files:
             relative_path = str(file).split(comp.name)[1]
