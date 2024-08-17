@@ -21,7 +21,10 @@ async def startup_event(*args, **kwargs):
     except asyncio.CancelledError:
         pass
 
-app = FastAPI(lifespan=startup_event)
+app = FastAPI(
+    lifespan=startup_event,
+    root_path='/api/catdocs/v1'
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,8 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-prefix = '/api/catdocs/v1'
-app.include_router(docs_router, prefix=prefix)
+app.include_router(docs_router)
 
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8002, host='0.0.0.0')
