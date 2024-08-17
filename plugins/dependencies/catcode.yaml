@@ -4,14 +4,14 @@ metadata:
   system: catcode
   application: backend
   deployableUnit: dependencies
-  version: 0.1.1
+  version: 0.1.2
   tags:
   - python
   - api
   - backend
   - dependencies
   annotations:
-        catcode.io/dependencies: true
+    catcode.io/dependencies: true
 spec:
   type: catcode-backend
   lifecycle: development
