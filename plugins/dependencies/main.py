@@ -3,7 +3,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dependecies.endpoints import router
 
-app = FastAPI()
+app = FastAPI(
+    root_path='/api/dependencies/v1'
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,7 +16,6 @@ app.add_middleware(
 )
 
 
-prefix = '/api/dependencies/v1'
-app.include_router(router, prefix=prefix)
+app.include_router(router)
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8001, host='0.0.0.0')
