@@ -1,5 +1,6 @@
 import asyncio
 import logging
+
 logger = logging.getLogger(__name__)
 
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -14,10 +15,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 import uvicorn
 
-
 from core_api.api.appplications import router as application_router
 from core_api.api.statistics import router as stat_router
-app = FastAPI()
+
+app = FastAPI(
+    root_path='/api/core-api/v1',
+
+)
 
 
 @app.exception_handler(RequestValidationError)
@@ -26,6 +30,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     logging.error(f"{request}: {exc_str}")
     content = {'status_code': 10422, 'message': exc_str, 'data': None}
     return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+
 # Allow all origins, allow all methods, allow all headers
 app.add_middleware(
     CORSMiddleware,
@@ -35,15 +41,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 async def startup_event():
     await on_start_up()
     scheduler.start()
 
-prefix = '/api/core-api/v1'
 
-app.include_router(application_router, prefix=prefix)
-app.include_router(stat_router, prefix=prefix)
+app.include_router(application_router)
+app.include_router(stat_router)
 if __name__ == '__main__':
     logging.getLogger("pika").setLevel(logging.ERROR)
     logging.getLogger("aiormq").setLevel(logging.ERROR)
